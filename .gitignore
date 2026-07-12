@@ -1,0 +1,14 @@
+# Config locale de l'agent
+.claude/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Éditeurs
+.vscode/
+.idea/
+
+# Fichiers temporaires
+_preview.html
+*.log

@@ -47,7 +47,7 @@
 
 /* ---------- Reset ---------- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
 body {
   font-family: var(--font-body);
   color: var(--fg);
@@ -240,7 +240,8 @@ body::before {
 .hero__line { display: block; }
 .hero__title .hero__line:first-child { font-weight: 500; font-size: clamp(1.6rem, 5vw, 3rem); color: var(--fg-muted); margin-bottom: 0.3rem; }
 .hero__surname {
-  font-weight: 800; font-size: clamp(2.6rem, 11.5vw, 8.4rem);
+  font-weight: 800; font-size: clamp(1.9rem, 11vw, 8.4rem);
+  overflow-wrap: break-word;
   background: linear-gradient(100deg, #ffffff 0%, #a9c4ff 46%, var(--gold) 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
   text-shadow: 0 0 70px rgba(91,140,255,0.22);
@@ -411,7 +412,7 @@ body::before {
 .contact__direct { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 1.8rem; }
 .contact__direct li { display: flex; align-items: center; gap: 0.7rem; color: var(--fg-muted); }
 .contact__direct .ico { color: var(--gold); flex: none; }
-.contact__direct a { color: var(--fg); transition: color var(--dur) var(--ease); }
+.contact__direct a { color: var(--fg); min-width: 0; overflow-wrap: anywhere; transition: color var(--dur) var(--ease); }
 .contact__direct a:hover { color: var(--gold); }
 
 .contact__socials { display: flex; gap: 0.4rem; margin-top: 1.6rem; }
@@ -451,13 +452,9 @@ body::before {
    Contact
    ========================================================= */
 .section--contact { padding-bottom: clamp(4rem, 8vh, 6rem); }
-.contact { text-align: center; padding: clamp(2.6rem, 7vw, 5rem) clamp(1.4rem, 5vw, 4rem); display: flex; flex-direction: column; align-items: center; }
+.contact { padding: clamp(2.6rem, 7vw, 5rem) clamp(1.4rem, 5vw, 4rem); }
 .contact__title { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.1rem, 6vw, 4.2rem); line-height: 1.03; letter-spacing: -0.02em; margin-bottom: 1.1rem; }
 .contact__lede { max-width: 48ch; color: var(--fg-muted); font-size: 1.08rem; }
-.contact .btn--lg { margin-top: 2.3rem; }
-.contact__socials { display: flex; gap: 1.6rem; margin-top: 2.2rem; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.06em; }
-.contact__socials a { color: var(--fg-muted); transition: color var(--dur) var(--ease); }
-.contact__socials a:hover { color: var(--accent); }
 
 /* =========================================================
    Footer
@@ -505,6 +502,10 @@ body.loaded .anim[data-delay="6"] { transition-delay: 0.82s; }
   .card--feature .card__media, .card--wide .card__media { aspect-ratio: 16 / 9; }
   .about__top { grid-template-columns: 1fr; }
   .creed { grid-template-columns: 1fr; }
+
+  /* Sans backdrop-filter, la barre ne crée plus de bloc conteneur :
+     le tiroir « position: fixed » se réfère bien au viewport (plein écran). */
+  .nav { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(14,28,72,0.92); }
 
   .nav__socials--desk { display: none; }
   .nav__mobextra { display: block; margin-top: 1rem; padding-top: 1.4rem; border-top: 1px solid var(--glass-border); width: 100%; }

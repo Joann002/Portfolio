@@ -257,16 +257,23 @@
     links.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => toggle(false)));
   }
 
-  /* ---------- Progression de lecture ---------- */
+  /* ---------- Progression de lecture + retour en haut ---------- */
   const progress = document.getElementById("scrollProgress");
-  if (progress) {
+  const toTop = document.getElementById("toTop");
+  if (progress || toTop) {
     const onScroll = () => {
       const h = document.documentElement;
       const max = h.scrollHeight - h.clientHeight;
-      progress.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+      if (progress) progress.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+      if (toTop) toTop.classList.toggle("is-visible", h.scrollTop > 500);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
+  }
+  if (toTop) {
+    toTop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: prefersReduced ? "auto" : "smooth" });
+    });
   }
 
   /* ---------- Révélation au scroll (avec stagger) ---------- */

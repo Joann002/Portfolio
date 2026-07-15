@@ -40,13 +40,14 @@
 
 /* ---------- Reset ---------- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; scroll-padding-top: 5.5rem; }
 body {
   font-family: var(--font-body);
   color: var(--fg);
   background: var(--bg-deep);
   line-height: 1.6;
   min-height: 100dvh;
+  padding-top: 4.6rem; /* place sous la nav fixe */
   overflow-x: hidden;
   position: relative;
   text-rendering: optimizeLegibility;
@@ -131,7 +132,7 @@ body::before {
    Navigation
    ========================================================= */
 .nav {
-  position: sticky; top: 0; z-index: var(--z-nav);
+  position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-nav);
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
   max-width: var(--maxw); margin: 0.9rem auto 0;
   padding: 0.7rem 1.1rem;

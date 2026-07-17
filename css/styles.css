@@ -234,8 +234,8 @@ body::before {
 .hero__line { display: block; }
 .hero__title .hero__line:first-child { font-weight: 500; font-size: clamp(1.6rem, 5vw, 3rem); color: var(--fg-muted); margin-bottom: 0.3rem; }
 .hero__surname {
-  font-weight: 800; font-size: clamp(1.9rem, 11vw, 8.4rem);
-  overflow-wrap: break-word;
+  font-weight: 800; font-size: clamp(1.9rem, 10.5vw, 8rem);
+  white-space: nowrap;
   background: linear-gradient(100deg, #ffffff 0%, #a9c4ff 46%, var(--gold) 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
   text-shadow: 0 0 70px rgba(91,140,255,0.22);

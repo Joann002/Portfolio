@@ -590,7 +590,14 @@
     resizeTimer = setTimeout(resize, 150);
   });
 
-  resize();
-  requestAnimationFrame(draw);
-  scheduleShooting();
+  // Démarre une fois la page chargée et au repos : le fond ne concurrence pas le premier affichage
+  const start = () => {
+    resize();
+    canvas.classList.add("is-on");
+    requestAnimationFrame(draw);
+    scheduleShooting();
+  };
+  const whenIdle = () => (window.requestIdleCallback || setTimeout)(start, { timeout: 2000 });
+  if (document.readyState === "complete") whenIdle();
+  else window.addEventListener("load", whenIdle, { once: true });
 })();

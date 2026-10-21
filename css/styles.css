@@ -58,16 +58,8 @@
 }
 :root[data-theme="dark"] .ambient__blob { opacity: 0.32; }
 
-/* Bascule de thème : le nouveau thème descend sur l'ancien (View Transitions), bord net de 10vh */
-::view-transition-old(root) { animation: none; }
-::view-transition-new(root) {
-  mix-blend-mode: normal;
-  /* Masque 3× la hauteur : 75 % → bord en haut de l'écran, 25 % → bord en bas */
-  -webkit-mask: linear-gradient(#000 calc(50% - 5vh), transparent calc(50% + 5vh)) 0 75% / 100% 300% no-repeat;
-  mask: linear-gradient(#000 calc(50% - 5vh), transparent calc(50% + 5vh)) 0 75% / 100% 300% no-repeat;
-  animation: theme-sweep 0.5s cubic-bezier(0.65, 0, 0.35, 1) both;
-}
-@keyframes theme-sweep { to { -webkit-mask-position: 0 25%; mask-position: 0 25%; } }
+/* Bascule de thème : révélation circulaire depuis le bouton (View Transitions) */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 
 /* ---------- Reset ---------- */
 * { box-sizing: border-box; margin: 0; padding: 0; }

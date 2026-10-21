@@ -197,10 +197,16 @@
       try { localStorage.setItem("jmr-theme", dark ? "dark" : "royal"); } catch (e) {}
       sync();
     };
-    // L'animation (rideau qui descend) est dans le CSS : ::view-transition-new(root)
+    // Saut hyperespace : le voile couvre l'écran, le thème change au pic (≈ 45 % de 1,1 s)
+    const warp = document.getElementById("warp");
     themeBtn.addEventListener("click", () => {
-      if (!document.startViewTransition || prefersReduced) return toggleTheme();
-      document.startViewTransition(toggleTheme);
+      if (prefersReduced || !warp) return toggleTheme();
+      if (warp.classList.contains("is-on")) return;
+      warp.classList.add("is-on");
+      setTimeout(toggleTheme, 500);
+    });
+    if (warp) warp.addEventListener("animationend", (e) => {
+      if (e.target === warp) warp.classList.remove("is-on");
     });
     sync();
   }

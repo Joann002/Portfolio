@@ -197,15 +197,11 @@
       try { localStorage.setItem("jmr-theme", dark ? "dark" : "royal"); } catch (e) {}
       sync();
     };
-    // Voile qui descend : le thème change à mi-course, quand le voile couvre tout l'écran
-    const veil = document.getElementById("veil");
+    // Le nouveau thème descend sur l'ancien : animation dans le CSS (::view-transition-new)
     themeBtn.addEventListener("click", () => {
-      if (prefersReduced || !veil) return toggleTheme();
-      if (veil.classList.contains("is-on")) return;
-      veil.classList.add("is-on");
-      setTimeout(toggleTheme, 500);
+      if (prefersReduced || !document.startViewTransition) return toggleTheme();
+      document.startViewTransition(toggleTheme);
     });
-    if (veil) veil.addEventListener("animationend", () => veil.classList.remove("is-on"));
     sync();
   }
 

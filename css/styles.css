@@ -58,17 +58,16 @@
 }
 :root[data-theme="dark"] .ambient__blob { opacity: 0.32; }
 
-/* Bascule de thème : voile aux bords adoucis qui descend (le thème change quand il couvre tout l'écran) */
-.veil {
-  position: fixed; left: 0; right: 0; top: 0; height: 160vh; z-index: 300; pointer-events: none;
-  background: linear-gradient(transparent, #05070f 30vh, #05070f 130vh, transparent);
-  transform: translateY(-160vh);
+/* Bascule de thème : le nouveau thème descend sur l'ancien (View Transitions), bord net de 10vh */
+::view-transition-old(root) { animation: none; }
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  /* Masque 3× la hauteur : 75 % → bord en haut de l'écran, 25 % → bord en bas */
+  -webkit-mask: linear-gradient(#000 calc(50% - 5vh), transparent calc(50% + 5vh)) 0 75% / 100% 300% no-repeat;
+  mask: linear-gradient(#000 calc(50% - 5vh), transparent calc(50% + 5vh)) 0 75% / 100% 300% no-repeat;
+  animation: theme-sweep 0.5s cubic-bezier(0.65, 0, 0.35, 1) both;
 }
-.veil.is-on { animation: veil 1s ease-in-out both; }
-@keyframes veil {
-  50% { transform: translateY(-30vh); } /* zone pleine = 0 → 100vh */
-  100% { transform: translateY(100vh); }
-}
+@keyframes theme-sweep { to { -webkit-mask-position: 0 25%; mask-position: 0 25%; } }
 
 /* ---------- Reset ---------- */
 * { box-sizing: border-box; margin: 0; padding: 0; }

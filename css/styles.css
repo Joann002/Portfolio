@@ -473,6 +473,7 @@ body::before {
 .field__error { min-height: 0; font-size: 0.82rem; color: #ff9aac; }
 .field.is-invalid .field__error { min-height: 1em; }
 .contact__form .btn { align-self: flex-start; margin-top: 0.3rem; }
+.contact__form[aria-busy="true"] .btn { opacity: 0.7; cursor: progress; }
 .contact__formnote { font-size: 0.9rem; color: var(--gold); min-height: 1.2em; }
 .contact__formnote.is-error { color: #ff9aac; }
 

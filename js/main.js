@@ -77,7 +77,9 @@
       "footer.note": "Conçu dans le vide, compilé sous les étoiles.",
       "form.errRequired": "Ce champ est requis.",
       "form.errEmail": "Adresse email invalide.",
-      "form.opened": "Votre client mail s'ouvre avec le message pré-rempli ✦",
+      "form.sending": "Envoi en cours…",
+      "form.sent": "Message envoyé, je vous réponds vite ✦",
+      "form.failed": "L'envoi a échoué. Réessayez ou écrivez-moi directement par email.",
     },
     en: {
       "nav.works": "Work", "nav.expertise": "Expertise", "nav.about": "About",
@@ -140,7 +142,9 @@
       "footer.note": "Designed in the void, compiled under the stars.",
       "form.errRequired": "This field is required.",
       "form.errEmail": "Invalid email address.",
-      "form.opened": "Your mail client is opening with the message prefilled ✦",
+      "form.sending": "Sending…",
+      "form.sent": "Message sent, I'll get back to you soon ✦",
+      "form.failed": "Sending failed. Try again or email me directly.",
     },
   };
 
@@ -215,7 +219,7 @@
   }
 
   /* =======================================================
-     Formulaire de contact (validation + mailto)
+     Formulaire de contact (validation + envoi via FormSubmit)
   ======================================================= */
   const form = document.getElementById("contactForm");
   if (form) {
@@ -258,13 +262,34 @@
         if (firstBad) firstBad.focus();
         return;
       }
-      const subject = encodeURIComponent(`Contact portfolio — ${fields.name.value.trim()}`);
-      const body = encodeURIComponent(
-        `${fields.message.value.trim()}\n\n— ${fields.name.value.trim()} (${fields.email.value.trim()})`
-      );
-      window.location.href = `mailto:joannrazafinimanana159@gmail.com?subject=${subject}&body=${body}`;
-      if (note) { note.classList.remove("is-error"); note.textContent = t("form.opened"); }
-      form.reset();
+      if (form.getAttribute("aria-busy") === "true") return;
+      const setNote = (key, isError) => {
+        if (!note) return;
+        note.classList.toggle("is-error", isError);
+        note.textContent = t(key);
+      };
+      form.setAttribute("aria-busy", "true");
+      setNote("form.sending", false);
+      fetch("https://formsubmit.co/ajax/joannrazafinimanana159@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          name: fields.name.value.trim(),
+          email: fields.email.value.trim(),
+          message: fields.message.value.trim(),
+          _subject: `Contact portfolio — ${fields.name.value.trim()}`,
+          _replyto: fields.email.value.trim(),
+          _template: "table",
+        }),
+      })
+        .then((res) => res.json().then((data) => {
+          if (!res.ok || String(data.success) !== "true") throw new Error(data.message);
+          setNote("form.sent", false);
+          form.reset();
+        }))
+        // Les champs restent remplis en cas d'échec : rien n'est perdu.
+        .catch(() => setNote("form.failed", true))
+        .finally(() => form.removeAttribute("aria-busy"));
     });
   }
 

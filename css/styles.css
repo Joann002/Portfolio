@@ -58,13 +58,16 @@
 }
 :root[data-theme="dark"] .ambient__blob { opacity: 0.32; }
 
-/* Bascule de thème : extinction des lumières (le thème change pendant le noir) */
-.blackout { position: fixed; inset: 0; z-index: 300; pointer-events: none; opacity: 0; background: #020308; }
-.blackout.is-on { animation: blackout 0.5s both; }
-@keyframes blackout {
-  0% { opacity: 0; animation-timing-function: ease-in; }
-  30%, 45% { opacity: 1; animation-timing-function: ease-out; }
-  100% { opacity: 0; }
+/* Bascule de thème : voile aux bords adoucis qui descend (le thème change quand il couvre tout l'écran) */
+.veil {
+  position: fixed; left: 0; right: 0; top: 0; height: 160vh; z-index: 300; pointer-events: none;
+  background: linear-gradient(transparent, #05070f 30vh, #05070f 130vh, transparent);
+  transform: translateY(-160vh);
+}
+.veil.is-on { animation: veil 1s ease-in-out both; }
+@keyframes veil {
+  50% { transform: translateY(-30vh); } /* zone pleine = 0 → 100vh */
+  100% { transform: translateY(100vh); }
 }
 
 /* ---------- Reset ---------- */

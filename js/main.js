@@ -288,7 +288,7 @@
           form.reset();
         }))
         // Les champs restent remplis en cas d'échec : rien n'est perdu.
-        .catch(() => setNote("form.failed", true))
+        .catch((err) => { console.warn("Formulaire :", err.message); setNote("form.failed", true); })
         .finally(() => form.removeAttribute("aria-busy"));
     });
   }

@@ -1,3 +1,9 @@
+/* ---------- Polices (hébergées sur le site, sous-ensemble latin) ---------- */
+@font-face { font-family: "Archivo"; src: url("../assets/fonts/archivo.woff2") format("woff2"); font-weight: 400 900; font-display: swap; }
+@font-face { font-family: "Space Grotesk"; src: url("../assets/fonts/space-grotesk.woff2") format("woff2"); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: "Space Mono"; src: url("../assets/fonts/space-mono-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Space Mono"; src: url("../assets/fonts/space-mono-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
 /* ---------- Tokens : couleurs sémantiques ---------- */
 :root {
   /* Surfaces (bleu royal — jamais de noir pur) */
@@ -21,7 +27,7 @@
   /* Texte */
   --fg: #eef3ff;
   --fg-muted: rgba(202, 214, 255, 0.68);
-  --fg-dim: rgba(202, 214, 255, 0.45);
+  --fg-dim: rgba(202, 214, 255, 0.66);
 
   /* Typographie */
   --font-display: "Archivo", system-ui, sans-serif;
@@ -535,15 +541,18 @@ body::before {
    Animations d'apparition
    ========================================================= */
 /* Intro au chargement */
-.anim { opacity: 0; transform: translateY(24px); }
-body.loaded .anim { opacity: 1; transform: none; transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
-body.loaded .anim[data-delay="0"] { transition-delay: 0.05s; }
-body.loaded .anim[data-delay="1"] { transition-delay: 0.15s; }
-body.loaded .anim[data-delay="2"] { transition-delay: 0.28s; }
-body.loaded .anim[data-delay="3"] { transition-delay: 0.44s; }
-body.loaded .anim[data-delay="4"] { transition-delay: 0.58s; }
-body.loaded .anim[data-delay="5"] { transition-delay: 0.7s; }
-body.loaded .anim[data-delay="6"] { transition-delay: 0.82s; }
+/* Animation CSS pure : l'intro démarre au premier affichage, sans attendre le JavaScript */
+.anim { animation: intro-rise 0.9s var(--ease) both; }
+@keyframes intro-rise { from { opacity: 0; transform: translateY(24px); } }
+.anim[data-delay="0"] { animation-delay: 0.05s; }
+.anim[data-delay="1"] { animation-delay: 0.15s; }
+.anim[data-delay="2"] { animation-delay: 0.28s; }
+.anim[data-delay="3"] { animation-delay: 0.44s; }
+.anim[data-delay="4"] { animation-delay: 0.58s; }
+.anim[data-delay="5"] { animation-delay: 0.7s; }
+.anim[data-delay="6"] { animation-delay: 0.82s; }
+/* Le nom garde son reflet en plus de l'intro */
+.hero__surname.anim { animation-name: intro-rise, shimmer; animation-duration: 0.9s, 9s; animation-timing-function: var(--ease), linear; animation-iteration-count: 1, infinite; animation-fill-mode: both, none; }
 
 /* Reveal au scroll (avec stagger appliqué en JS) */
 .reveal { opacity: 0; transform: translateY(30px); filter: blur(8px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease); }

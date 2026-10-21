@@ -293,12 +293,6 @@
     });
   }
 
-  /* ---------- Intro au chargement ---------- */
-  // Le script est `defer` : le DOM est prêt. On lance l'intro à la frame
-  // suivante (sans attendre le `load` complet : polices, images, réseau).
-  requestAnimationFrame(() => document.body.classList.add("loaded"));
-  setTimeout(() => document.body.classList.add("loaded"), 400);
-
   /* ---------- Menu mobile ---------- */
   const burger = document.getElementById("burger");
   const links = document.getElementById("navLinks");

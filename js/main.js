@@ -159,7 +159,8 @@
     document.documentElement.lang = lang;
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const v = dict[el.getAttribute("data-i18n")];
-      if (v != null) el.textContent = v;
+      // N'écrit que si le texte change : sinon toute la page est remise en page pour rien
+      if (v != null && el.textContent !== v) el.textContent = v;
     });
     document.querySelectorAll("[data-i18n-html]").forEach((el) => {
       const v = dict[el.getAttribute("data-i18n-html")];
@@ -167,7 +168,7 @@
     });
     document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
       const v = dict[el.getAttribute("data-i18n-ph")];
-      if (v != null) el.setAttribute("placeholder", v);
+      if (v != null && el.getAttribute("placeholder") !== v) el.setAttribute("placeholder", v);
     });
     document.querySelectorAll(".lang__btn").forEach((b) => {
       const on = b.getAttribute("data-lang") === lang;
@@ -440,6 +441,21 @@
   const pointer = { x: 0.5, y: 0.5 };
   const LINK_DIST = 132;
 
+  // Halos pré-rendus : un shadowBlur par étoile et par frame coûte trop cher au CPU mobile
+  function makeGlow(rgb) {
+    const c = document.createElement("canvas");
+    c.width = c.height = 32;
+    const g = c.getContext("2d");
+    const grad = g.createRadialGradient(16, 16, 0, 16, 16, 16);
+    grad.addColorStop(0, `rgba(${rgb},0.9)`);
+    grad.addColorStop(1, `rgba(${rgb},0)`);
+    g.fillStyle = grad;
+    g.fillRect(0, 0, 32, 32);
+    return c;
+  }
+  const glowGold = makeGlow("244,213,141");
+  const glowBlue = makeGlow("143,176,255");
+
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     width = window.innerWidth;
@@ -521,19 +537,16 @@
       const sy = s.y + py * s.z;
       const r = s.r * (0.8 + twinkle * 0.5);
 
-      if (s.gold) {
-        ctx.fillStyle = `rgba(244,213,141,${0.55 + twinkle * 0.45})`;
-        ctx.shadowColor = "rgba(244,213,141,0.9)";
-      } else {
-        ctx.fillStyle = `rgba(231,239,255,${0.45 + twinkle * 0.5})`;
-        ctx.shadowColor = "rgba(143,176,255,0.7)";
-      }
-      ctx.shadowBlur = r * 4;
+      ctx.globalAlpha = s.gold ? 1 : 0.75;
+      ctx.drawImage(s.gold ? glowGold : glowBlue, sx - r * 4, sy - r * 4, r * 8, r * 8);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = s.gold
+        ? `rgba(244,213,141,${0.55 + twinkle * 0.45})`
+        : `rgba(231,239,255,${0.45 + twinkle * 0.5})`;
       ctx.beginPath();
       ctx.arc(sx, sy, r, 0, Math.PI * 2);
       ctx.fill();
     }
-    ctx.shadowBlur = 0;
 
     // Étoiles filantes
     for (let i = shootingStars.length - 1; i >= 0; i--) {

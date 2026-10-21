@@ -543,7 +543,8 @@ body::before {
 /* Intro au chargement */
 /* Animation CSS pure : l'intro démarre au premier affichage, sans attendre le JavaScript */
 .anim { animation: intro-rise 0.9s var(--ease) both; }
-@keyframes intro-rise { from { opacity: 0; transform: translateY(24px); } }
+/* 0.01 plutôt que 0 : invisible à l'œil, mais Chrome compte le titre comme affiché dès le premier rendu (LCP) */
+@keyframes intro-rise { from { opacity: 0.01; transform: translateY(24px); } }
 .anim[data-delay="0"] { animation-delay: 0.05s; }
 .anim[data-delay="1"] { animation-delay: 0.15s; }
 .anim[data-delay="2"] { animation-delay: 0.28s; }

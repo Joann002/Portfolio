@@ -197,19 +197,10 @@
       try { localStorage.setItem("jmr-theme", dark ? "dark" : "royal"); } catch (e) {}
       sync();
     };
-    themeBtn.addEventListener("click", (e) => {
+    // L'animation (rideau qui descend) est dans le CSS : ::view-transition-new(root)
+    themeBtn.addEventListener("click", () => {
       if (!document.startViewTransition || prefersReduced) return toggleTheme();
-      const r = themeBtn.getBoundingClientRect();
-      // Clic clavier : clientX/Y valent 0, on part du centre du bouton
-      const x = e.clientX || r.left + r.width / 2;
-      const y = e.clientY || r.top + r.height / 2;
-      const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-      document.startViewTransition(toggleTheme).ready.then(() => {
-        root.animate(
-          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${end}px at ${x}px ${y}px)`] },
-          { duration: 700, easing: "cubic-bezier(0.16, 1, 0.3, 1)", pseudoElement: "::view-transition-new(root)" }
-        );
-      });
+      document.startViewTransition(toggleTheme);
     });
     sync();
   }

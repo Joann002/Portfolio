@@ -58,18 +58,13 @@
 }
 :root[data-theme="dark"] .ambient__blob { opacity: 0.32; }
 
-/* Bascule de thème : rideau au bord adouci qui descend (View Transitions) */
-::view-transition-old(root) { animation: none; }
-::view-transition-new(root) {
-  mix-blend-mode: normal;
-  -webkit-mask: linear-gradient(#000 40%, transparent 60%) 0 0 / 100% 250% no-repeat;
-  mask: linear-gradient(#000 40%, transparent 60%) 0 0 / 100% 250% no-repeat;
-  animation: theme-sweep 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
-}
-@keyframes theme-sweep {
-  from { -webkit-mask-position: 0 100%; mask-position: 0 100%; }
-  to { -webkit-mask-position: 0 0; mask-position: 0 0; }
-}
+/* Bascule de thème : saut hyperespace (View Transitions) */
+::view-transition { background: #05070f; } /* vide spatial entre les deux vues, évite un flash blanc */
+::view-transition-old(root), ::view-transition-new(root) { mix-blend-mode: normal; }
+::view-transition-old(root) { animation: warp-out 0.7s cubic-bezier(0.7, 0, 0.84, 0) both; }
+::view-transition-new(root) { animation: warp-in 0.8s var(--ease) 0.3s both; }
+@keyframes warp-out { to { transform: scale(1.4); filter: blur(16px) brightness(1.8); opacity: 0; } }
+@keyframes warp-in { from { transform: scale(0.82); filter: blur(10px); opacity: 0; } }
 
 /* ---------- Reset ---------- */
 * { box-sizing: border-box; margin: 0; padding: 0; }

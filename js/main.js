@@ -270,7 +270,7 @@
       };
       form.setAttribute("aria-busy", "true");
       setNote("form.sending", false);
-      fetch("https://formsubmit.co/ajax/joannrazafinimanana159@gmail.com", {
+      fetch("https://formsubmit.co/ajax/932c6ada398ad0f603411092a44798dd", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({

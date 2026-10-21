@@ -185,6 +185,36 @@
   applyLang();
 
   /* =======================================================
+     Thème sombre (bascule + révélation circulaire)
+  ======================================================= */
+  const themeBtn = document.getElementById("themeToggle");
+  if (themeBtn) {
+    const root = document.documentElement;
+    const sync = () => themeBtn.setAttribute("aria-pressed", String(root.dataset.theme === "dark"));
+    const toggleTheme = () => {
+      const dark = root.dataset.theme !== "dark";
+      if (dark) root.dataset.theme = "dark"; else delete root.dataset.theme;
+      try { localStorage.setItem("jmr-theme", dark ? "dark" : "royal"); } catch (e) {}
+      sync();
+    };
+    themeBtn.addEventListener("click", (e) => {
+      if (!document.startViewTransition || prefersReduced) return toggleTheme();
+      const r = themeBtn.getBoundingClientRect();
+      // Clic clavier : clientX/Y valent 0, on part du centre du bouton
+      const x = e.clientX || r.left + r.width / 2;
+      const y = e.clientY || r.top + r.height / 2;
+      const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+      document.startViewTransition(toggleTheme).ready.then(() => {
+        root.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${end}px at ${x}px ${y}px)`] },
+          { duration: 700, easing: "cubic-bezier(0.16, 1, 0.3, 1)", pseudoElement: "::view-transition-new(root)" }
+        );
+      });
+    });
+    sync();
+  }
+
+  /* =======================================================
      Formulaire de contact (validation + mailto)
   ======================================================= */
   const form = document.getElementById("contactForm");
@@ -321,6 +351,23 @@
   }
 
   if (!prefersReduced) {
+    /* ---------- Compteurs du héro (après l'intro) ---------- */
+    document.querySelectorAll(".hero__stats dd").forEach((dd) => {
+      const node = dd.firstChild;
+      const end = parseInt(node.textContent, 10);
+      if (!end) return;
+      node.textContent = "0";
+      setTimeout(() => {
+        const t0 = performance.now();
+        const step = (now) => {
+          const p = Math.min((now - t0) / 1600, 1);
+          node.textContent = Math.round(end * (1 - Math.pow(1 - p, 4)));
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }, 700);
+    });
+
     /* ---------- Projecteur / lueur des cartes ---------- */
     const spotlight = document.getElementById("spotlight");
     window.addEventListener(
@@ -340,6 +387,13 @@
         const r = card.getBoundingClientRect();
         glow.style.setProperty("--cx", e.clientX - r.left + "px");
         glow.style.setProperty("--cy", e.clientY - r.top + "px");
+        // Inclinaison 3D : ±5° selon la position du pointeur
+        card.style.setProperty("--ry", ((e.clientX - r.left) / r.width - 0.5) * 10 + "deg");
+        card.style.setProperty("--rx", (0.5 - (e.clientY - r.top) / r.height) * 10 + "deg");
+      });
+      card.addEventListener("pointerleave", () => {
+        card.style.removeProperty("--rx");
+        card.style.removeProperty("--ry");
       });
     });
 

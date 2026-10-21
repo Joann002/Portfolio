@@ -197,17 +197,15 @@
       try { localStorage.setItem("jmr-theme", dark ? "dark" : "royal"); } catch (e) {}
       sync();
     };
-    // Saut hyperespace : le voile couvre l'écran, le thème change au pic (≈ 45 % de 1,1 s)
-    const warp = document.getElementById("warp");
+    // Extinction des lumières : le thème change pendant le noir complet (30–45 % de 0,5 s)
+    const blackout = document.getElementById("blackout");
     themeBtn.addEventListener("click", () => {
-      if (prefersReduced || !warp) return toggleTheme();
-      if (warp.classList.contains("is-on")) return;
-      warp.classList.add("is-on");
-      setTimeout(toggleTheme, 500);
+      if (prefersReduced || !blackout) return toggleTheme();
+      if (blackout.classList.contains("is-on")) return;
+      blackout.classList.add("is-on");
+      setTimeout(toggleTheme, 185);
     });
-    if (warp) warp.addEventListener("animationend", (e) => {
-      if (e.target === warp) warp.classList.remove("is-on");
-    });
+    if (blackout) blackout.addEventListener("animationend", () => blackout.classList.remove("is-on"));
     sync();
   }
 
